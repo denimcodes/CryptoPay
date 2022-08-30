@@ -1,10 +1,10 @@
-interface ButtonProps {
-	children: string | JSX.Element;
-}
+import { ComponentProps } from "react";
 
-const Button: React.FC<ButtonProps> = ({ children }) => {
+interface ButtonProps extends ComponentProps<"button"> {}
+
+const Button: React.FC<ButtonProps> = ({ children, className, ...props }) => {
 	return (
-		<button className="px-4 py-2 bg-black text-white rounded-md font-medium hover:bg-gray-700">
+		<button className="rounded-md btn btn-primary" {...props}>
 			{children}
 		</button>
 	);
