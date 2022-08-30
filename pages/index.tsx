@@ -17,7 +17,7 @@ const Home: NextPage = () => {
 				<Header />
 				<main className="flex-1 h-full">
 					{/* Hero */}
-					<section className="container h-full px-6 mx-auto md:px-0">
+					<section className="container h-full px-6 mx-auto md:px-1">
 						<div className="flex items-center h-full gap-4">
 							<div className="w-1/2 space-y-4">
 								<h2 className="text-6xl font-bold">
