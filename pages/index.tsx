@@ -1,8 +1,10 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 import Button from "../components/Button";
 import Header from "../components/Header";
+import heroImage from "../public/hero.svg";
 
 const Home: NextPage = () => {
 	return (
@@ -15,7 +17,7 @@ const Home: NextPage = () => {
 				<Header />
 				<main className="flex-1 h-full">
 					{/* Hero */}
-					<section className="container h-full px-6 mx-auto">
+					<section className="container h-full px-6 mx-auto md:px-0">
 						<div className="flex items-center h-full gap-4">
 							<div className="w-1/2 space-y-4">
 								<h2 className="text-6xl font-bold">
@@ -33,7 +35,15 @@ const Home: NextPage = () => {
 									</Link>
 								</div>
 							</div>
-							<div className="w-1/2"></div>
+							<div className="w-1/2">
+								<Image
+									src={heroImage}
+									alt=""
+									width="260"
+									height="260"
+									layout="responsive"
+								/>
+							</div>
 						</div>
 					</section>
 				</main>

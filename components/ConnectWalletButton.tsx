@@ -1,17 +1,43 @@
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { UAuthConnector } from "@uauth/web3-react";
+import { useWeb3React } from "@web3-react/core";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { uauth } from "../connectors";
+import unstoppableIcon from "../public/unstoppable.svg";
 
 const ConnectWalletButton = () => {
-	const { address, isConnected, connector } = useAccount();
-	const { connect, connectors, error, isLoading, pendingConnector } =
-		useConnect();
-	const { disconnect } = useDisconnect();
+	const { connector, activate, account, deactivate } = useWeb3React();
+	const [uDomain, setUDomain] = useState<string | null>(null);
 
-	if (isConnected) {
+	useEffect(() => {
+		if (!connector) return;
+
+		const resolveUDomain = async () => {
+			if (connector instanceof UAuthConnector) {
+				const { sub } = await (connector as UAuthConnector).uauth.user();
+				setUDomain(sub);
+			}
+		};
+
+		resolveUDomain();
+	}, [connector]);
+
+	const handleLogin = async () => {
+		await activate(uauth);
+	};
+
+	if (account) {
 		return (
-			<div>
-				<div>{address}</div>
-				<div>Connected to {connector!.name}</div>
-				<button onClick={() => disconnect()}>Disconnect</button>
+			<div className="dropdown">
+				<label tabIndex={0} className="m-1 rounded-md btn">
+					{uDomain ?? account.substring(0, 8)}
+				</label>
+				<ul
+					tabIndex={0}
+					className="px-4 py-2 shadow cursor-pointer dropdown-content menu bg-base-100 rounded-box w-52 hover:bg-gray-100"
+				>
+					<li onClick={() => deactivate()}>Disconnect</li>
+				</ul>
 			</div>
 		);
 	}
@@ -37,23 +63,21 @@ const ConnectWalletButton = () => {
 					>
 						✕
 					</label>
-					<h3 className="text-lg font-bold">Choose wallet</h3>
-					<div className="flex flex-col gap-4">
-						{connectors.map((connector) => (
-							<button
-								disabled={!connector.ready}
-								key={connector.id}
-								onClick={() => connect({ connector })}
+					<h3 className="mb-8 text-lg font-bold">Choose wallet</h3>
+					<div>
+						<ul className="flex flex-col gap-3 text-center cursor-pointer">
+							<li className="rounded-md btn btn-outline">MetaMask</li>
+							<li className="rounded-md btn btn-outline">WalletConnect</li>
+							<li
+								className="px-6 py-1 font-medium bg-[#0d67fe] hover:bg-[#0546b7] active:bg-[#478bfe] rounded-md text-white"
+								onClick={handleLogin}
 							>
-								{connector.name}
-								{!connector.ready && " (unsupported)"}
-								{isLoading &&
-									connector.id === pendingConnector?.id &&
-									" (connecting)"}
-							</button>
-						))}
-
-						{error && <div>{error.message}</div>}
+								<div className="flex items-center justify-center gap-1">
+									<Image src={unstoppableIcon} width="48" height="48" alt="" />
+									Login with Unstoppable
+								</div>
+							</li>
+						</ul>
 					</div>
 				</div>
 			</div>
