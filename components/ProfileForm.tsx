@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { Alchemy, Network } from "alchemy-sdk";
-import { debounce } from "lodash";
+import debounce from "lodash.debounce";
 import Image from "next/image";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { UNSDomain } from "../domain";
@@ -98,7 +98,7 @@ const ProfileForm: React.FC<ProfileFormProps> = (props) => {
 							type="text"
 							name="wallet-address"
 							id="wallet-address"
-							className="border-gray-500 rounded-md input input-bordered"
+							className="border-gray-200 rounded-md input input-bordered"
 							onChange={debounceOnChangeWalletAddress}
 						/>
 					</div>
@@ -149,43 +149,6 @@ const ProfileForm: React.FC<ProfileFormProps> = (props) => {
 					<div className="justify-end card-actions">
 						<Button type="submit">Send</Button>
 					</div>
-					{/* <div>
-					<label
-						htmlFor="wallet-modal"
-						className="float-right rounded-md btn modal-button"
-					>
-						Send
-					</label>
-					<input type="checkbox" id="wallet-modal" className="modal-toggle" />
-					<div className="modal">
-						<div className="relative modal-box">
-							<label
-								htmlFor="wallet-modal"
-								className="absolute btn btn-sm btn-circle right-2 top-2"
-							>
-								✕
-							</label>
-							<h3 className="mb-6 text-lg font-bold">Choose wallet</h3>
-							<div className="flex flex-col items-center gap-4">
-								<ConnectWalletButton />
-								<div className="divider">OR</div>
-								<div className="flex flex-col w-full gap-2">
-									<label
-										className="inline-block text-sm font-medium"
-										htmlFor="uns-domain"
-									>
-										UNS Domain
-									</label>
-									<input
-										className="border-gray-200 rounded-md input input-bordered"
-										type="text"
-										name="uns-domain"
-									/>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div> */}
 				</form>
 			</div>
 		</div>

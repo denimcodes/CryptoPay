@@ -2,11 +2,55 @@ import { UAuthConnector } from "@uauth/web3-react";
 import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { uauth } from "../connectors";
+import { Wallet, wallets } from "../connectors";
 import unstoppableIcon from "../public/unstoppable.svg";
 
+const WalletList = () => {
+	return (
+		<div>
+			<ul className="flex flex-col gap-3 text-center cursor-pointer">
+				{wallets.map((wallet) => {
+					return <WalletButton key={wallet.id} wallet={wallet} />;
+				})}
+			</ul>
+		</div>
+	);
+};
+
+interface WalletButtonProps {
+	wallet: Wallet;
+}
+
+const WalletButton: React.FC<WalletButtonProps> = ({ wallet }) => {
+	const { name, connector } = wallet;
+	const { activate } = useWeb3React();
+	const handleLogin = async () => {
+		await activate(connector);
+	};
+
+	if (connector instanceof UAuthConnector) {
+		return (
+			<li
+				className="px-6 py-1 font-medium bg-[#0d67fe] hover:bg-[#0546b7] active:bg-[#478bfe] rounded-md text-white"
+				onClick={handleLogin}
+			>
+				<div className="flex items-center justify-center gap-1">
+					<Image src={unstoppableIcon} width="48" height="48" alt="" />
+					{name}
+				</div>
+			</li>
+		);
+	}
+
+	return (
+		<li className="rounded-md btn btn-outline" onClick={handleLogin}>
+			{name}
+		</li>
+	);
+};
+
 const ConnectWalletButton = () => {
-	const { connector, activate, account, deactivate } = useWeb3React();
+	const { connector, account, deactivate } = useWeb3React();
 	const [uDomain, setUDomain] = useState<string | null>(null);
 
 	useEffect(() => {
@@ -21,10 +65,6 @@ const ConnectWalletButton = () => {
 
 		resolveUDomain();
 	}, [connector]);
-
-	const handleLogin = async () => {
-		await activate(uauth);
-	};
 
 	if (account) {
 		return (
@@ -64,21 +104,7 @@ const ConnectWalletButton = () => {
 						✕
 					</label>
 					<h3 className="mb-8 text-lg font-bold">Choose wallet</h3>
-					<div>
-						<ul className="flex flex-col gap-3 text-center cursor-pointer">
-							<li className="rounded-md btn btn-outline">MetaMask</li>
-							<li className="rounded-md btn btn-outline">WalletConnect</li>
-							<li
-								className="px-6 py-1 font-medium bg-[#0d67fe] hover:bg-[#0546b7] active:bg-[#478bfe] rounded-md text-white"
-								onClick={handleLogin}
-							>
-								<div className="flex items-center justify-center gap-1">
-									<Image src={unstoppableIcon} width="48" height="48" alt="" />
-									Login with Unstoppable
-								</div>
-							</li>
-						</ul>
-					</div>
+					<WalletList />
 				</div>
 			</div>
 		</>

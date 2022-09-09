@@ -16,10 +16,28 @@ export const uauth = new UAuthConnector({
 	connectors: { injected, walletconnect },
 });
 
-const connectors: Record<string, AbstractConnector> = {
-	injected,
-	walletconnect,
-	uauth,
-};
+export interface Wallet {
+	id: string;
+	name: string;
+	connector: AbstractConnector;
+}
 
-export default connectors;
+export const wallets = [
+	{
+		id: "metamask",
+		name: "Metamask",
+		connector: injected,
+	},
+	{
+		id: "walletconnect",
+		name: "Wallet Connect",
+		connector: walletconnect,
+	},
+	{
+		id: "uauth",
+		name: "Login with Unstoppable",
+		connector: uauth,
+	},
+];
+
+export default wallets;
